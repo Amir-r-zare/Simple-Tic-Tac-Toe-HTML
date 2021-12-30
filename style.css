@@ -1,0 +1,433 @@
+* {
+    box-sizing: border-box;
+}
+
+body,
+html {
+    align-items: center;
+    background-color: #f62459;
+    color: #3d834e;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+}
+
+svg {
+    height: 100px;
+    width: 100px;
+}
+
+input {
+    opacity: 0;
+}
+
+label {
+    cursor: pointer;
+    height: 100px;
+    width: 100px;
+    z-index: 2;
+}
+
+input,
+span,
+label {
+    left: calc(var(--col) * 100px);
+    position: absolute;
+    top: calc(var(--row) * 100px);
+}
+
+circle,
+path {
+    animation-fill-mode: forwards;
+    animation-name: draw;
+}
+
+circle {
+    animation-duration: 0.5s;
+    stroke: #000000;
+}
+
+path {
+    animation-duration: 0.25s;
+    stroke: #0474f3;
+}
+
+button {
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    padding: 8px 24px;
+    border-radius: 4px;
+    border: 0;
+    background: #1f3a93;
+    font-size: 0.75rem;
+    color: #fafafa;
+    filter: drop-shadow(0 5px 5px #000);
+    transition: transform 0.1s, filter 0.1s;
+}
+
+button:hover {
+    filter: drop-shadow(0 5px 4px #000);
+    transform: translateY(1px);
+}
+
+button:active {
+    transform: translateY(5px);
+    filter: drop-shadow(0 0 0 transparent);
+}
+
+span {
+    display: none;
+    transform: translate3d(0, 0, 3px);
+}
+
+input:checked+span {
+    display: block;
+}
+
+.o {
+    transform: rotateY(180deg) rotate(-35deg);
+}
+
+.x path:nth-of-type(2) {
+    animation-delay: 0.25s;
+}
+
+.board {
+    height: 300px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transform-style: preserve-3d;
+    width: 300px;
+}
+
+.board__line {
+    height: 10px;
+    left: calc(var(--x) * 100px);
+    position: absolute;
+    top: calc(var(--y) * 100px);
+    width: 300px;
+}
+
+.board__line path {
+    stroke: #fafafa;
+}
+
+.board__line:nth-of-type(1),
+.board__line:nth-of-type(2) {
+    transform: rotate(90deg) translate(-5px, 0);
+    transform-origin: left center;
+}
+
+.board__line:nth-of-type(3),
+.board__line:nth-of-type(4) {
+    transform: translate(0, -50%);
+}
+
+.board__line:nth-of-type(1) path {
+    animation-delay: 0.25s;
+}
+
+.board__line:nth-of-type(2) path {
+    animation-delay: 0.5s;
+}
+
+.board__line:nth-of-type(3) path {
+    animation-delay: 0.75s;
+}
+
+.board__line:nth-of-type(4) path {
+    animation-delay: 1s;
+}
+
+.board__result {
+    animation: fadeBg 0.25s 0.5s;
+    animation-fill-mode: backwards;
+    background: #1f3a93;
+    display: none;
+    height: 100%;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    transform: translate3d(0, 0, 4px);
+    width: 100%;
+}
+
+.result__content {
+    align-items: center;
+    animation: flyIn 0.25s 0.75s;
+    animation-fill-mode: backwards;
+    background: darkorange;
+    border-radius: 10px;
+    color: #1f3a93;
+    display: flex;
+    filter: drop-shadow(0 10px 10px #000);
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+}
+
+.result__title {
+    font-size: 1.5rem;
+    font-weight: bolder;
+    text-transform: uppercase;
+}
+
+.result__details {
+    margin: 0;
+}
+
+.result__shield {
+    animation: fadeBg 0.25s 0.5s;
+    animation-fill-mode: backwards;
+    background: #1f3a93;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.result__emoji {
+    font-size: 5rem;
+}
+
+.result__icon path:nth-of-type(1) {
+    animation-delay: 1s;
+}
+
+.result__icon path:nth-of-type(2) {
+    animation-delay: 1.4s;
+}
+
+.result__icon circle {
+    animation-delay: 1s;
+}
+
+.result__firework-icon {
+    animation: fly 0.75s 1s;
+    animation-fill-mode: backwards;
+    animation-timing-function: cubic-bezier(0, 0.64, 0.25, 1.01);
+    font-size: 2rem;
+    height: 2rem;
+    left: 50%;
+    margin-left: -1rem;
+    margin-top: -1rem;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: rotate(calc(var(--r) * 1deg)) translateY(calc(var(--y) * -1px));
+    width: 2rem;
+}
+
+:checked~label:nth-of-type(odd),
+:checked~ :checked~ :checked~label:nth-of-type(odd),
+:checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(odd),
+:checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(odd),
+:checked~ :checked~label:nth-of-type(even),
+:checked~ :checked~ :checked~ :checked~label:nth-of-type(even),
+:checked~ :checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(even),
+:checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(even) {
+    transform: translate3d(0, 0, 2px);
+}
+
+:checked~label:nth-of-type(even),
+:checked~ :checked~ :checked~label:nth-of-type(even),
+:checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(even),
+:checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(even),
+:checked~ :checked~label:nth-of-type(odd),
+:checked~ :checked~ :checked~ :checked~label:nth-of-type(odd),
+:checked~ :checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(odd),
+:checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~label:nth-of-type(odd) {
+    transform: translate3d(0, 0, -1px);
+}
+
+:checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~ :checked~.board__result--draw {
+    display: block;
+}
+
+#x--0:checked~#x--1:checked~#x--2:checked~.board__result--x,
+#x--3:checked~#x--4:checked~#x--5:checked~.board__result--x,
+#x--6:checked~#x--7:checked~#x--8:checked~.board__result--x,
+#x--0:checked~#x--3:checked~#x--6:checked~.board__result--x,
+#x--1:checked~#x--4:checked~#x--7:checked~.board__result--x,
+#x--2:checked~#x--5:checked~#x--8:checked~.board__result--x,
+#x--0:checked~#x--4:checked~#x--8:checked~.board__result--x,
+#x--2:checked~#x--4:checked~#x--6:checked~.board__result--x,
+#o--0:checked~#o--1:checked~#o--2:checked~.board__result--o,
+#o--3:checked~#o--4:checked~#o--5:checked~.board__result--o,
+#o--6:checked~#o--7:checked~#o--8:checked~.board__result--o,
+#o--0:checked~#o--3:checked~#o--6:checked~.board__result--o,
+#o--1:checked~#o--4:checked~#o--7:checked~.board__result--o,
+#o--2:checked~#o--5:checked~#o--8:checked~.board__result--o,
+#o--0:checked~#o--4:checked~#o--8:checked~.board__result--o,
+#o--2:checked~#o--4:checked~#o--6:checked~.board__result--o {
+    display: block;
+}
+
+#x--0:checked~#x--1:checked~#x--2:checked~.board__result--x~.board__result--draw,
+#x--3:checked~#x--4:checked~#x--5:checked~.board__result--x~.board__result--draw,
+#x--6:checked~#x--7:checked~#x--8:checked~.board__result--x~.board__result--draw,
+#x--0:checked~#x--3:checked~#x--6:checked~.board__result--x~.board__result--draw,
+#x--1:checked~#x--4:checked~#x--7:checked~.board__result--x~.board__result--draw,
+#x--2:checked~#x--5:checked~#x--8:checked~.board__result--x~.board__result--draw,
+#x--0:checked~#x--4:checked~#x--8:checked~.board__result--x~.board__result--draw,
+#x--2:checked~#x--4:checked~#x--6:checked~.board__result--x~.board__result--draw,
+#o--0:checked~#o--1:checked~#o--2:checked~.board__result--o~.board__result--draw,
+#o--3:checked~#o--4:checked~#o--5:checked~.board__result--o~.board__result--draw,
+#o--6:checked~#o--7:checked~#o--8:checked~.board__result--o~.board__result--draw,
+#o--0:checked~#o--3:checked~#o--6:checked~.board__result--o~.board__result--draw,
+#o--1:checked~#o--4:checked~#o--7:checked~.board__result--o~.board__result--draw,
+#o--2:checked~#o--5:checked~#o--8:checked~.board__result--o~.board__result--draw,
+#o--0:checked~#o--4:checked~#o--8:checked~.board__result--o~.board__result--draw,
+#o--2:checked~#o--4:checked~#o--6:checked~.board__result--o~.board__result--draw {
+    display: none;
+}
+
+@-moz-keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@-webkit-keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@-o-keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@-moz-keyframes fadeBg {
+    from {
+        background: rgba(31, 58, 147, 0);
+    }
+}
+
+@-webkit-keyframes fadeBg {
+    from {
+        background: rgba(31, 58, 147, 0);
+    }
+}
+
+@-o-keyframes fadeBg {
+    from {
+        background: rgba(31, 58, 147, 0);
+    }
+}
+
+@keyframes fadeBg {
+    from {
+        background: rgba(31, 58, 147, 0);
+    }
+}
+
+@-moz-keyframes fly {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    5%, 50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes fly {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    5%, 50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@-o-keyframes fly {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    5%, 50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fly {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    5%, 50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes flyIn {
+    from {
+        transform: translateY(100%) scale(0);
+    }
+}
+
+@-webkit-keyframes flyIn {
+    from {
+        transform: translateY(100%) scale(0);
+    }
+}
+
+@-o-keyframes flyIn {
+    from {
+        transform: translateY(100%) scale(0);
+    }
+}
+
+@keyframes flyIn {
+    from {
+        transform: translateY(100%) scale(0);
+    }
+}
