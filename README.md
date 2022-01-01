@@ -1,2 +1,2 @@
-# Simple-Tic-Tac-Toe-
-simple tic tac tow with out AI with Html , Css
+# Simple-Tic-Tac-Toe
+simple tic tac tow without AI with Html , Css
